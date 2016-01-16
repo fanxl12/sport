@@ -10,6 +10,7 @@ public class Catalog extends BaseEntity {
 
 	private Catalog parentCatalog;
 	private List<Catalog> childCatalogs;
+	//背景图片地址
 	private String url;
 
 //	@ManyToOne
