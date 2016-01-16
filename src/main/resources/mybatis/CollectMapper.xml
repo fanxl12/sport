@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.agitation.sport.repository.CollectDao">
+
+    <insert id="save" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		insert into sport_collect (userId, courseId, matchId, createDate)
+		values (#{userId}, #{courseId}, #{matchId}, now())
+		<selectKey resultType="long" keyProperty="id" order="AFTER">
+    		SELECT LAST_INSERT_ID()
+    	</selectKey>
+	</insert>
+
+    <select id="getMyCollects"  resultType="hashmap" parameterType="map">
+		select a.id, b.name, c.address
+		from sport_collect a
+		left join sport_course b on b.id=a.courseId
+		left join sport_company c on c.id = b.companyId
+		where a.userId=#{userId}
+		order by a.createDate desc
+	</select>
+	
+	<select id="getOne" resultType="hashmap" parameterType="map">
+		select id, courseId
+		from sport_collect
+		where courseId=#{courseId} and userId=#{userId}
+	</select>
+	
+	
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="long">
+	     delete from sport_collect where id=#{collectionId}
+	</delete>
+	
+</mapper> 

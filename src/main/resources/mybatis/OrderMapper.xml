@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.agitation.sport.repository.OrderDao">
+
+    <insert id="save"  parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		insert into sport_order (id, userId, courseId, matchId, createDate, count, totalMoney, discountId, status, payWay)
+		values (#{id}, #{userId}, #{courseId}, #{matchId}, now(), #{count}, #{totalMoney}, #{discountId}, 0, #{payWay})
+	</insert>
+	
+	<update id="payCourse" parameterType="map">
+		update sport_order set status=1
+		where id=#{orderId}
+	</update>
+	
+	<update id="confirmOrder" parameterType="map">
+		update sport_order set status=2, comfirmUserId=#{user.id}
+		where id=#{id}
+	</update>
+	
+    <select id="getCourseOrders"  resultType="hashmap" parameterType="map">
+		select a.id, a.payWay, b.`name`, c.address, c.name AS companyName,
+		DATE_FORMAT(a.createDate, '%Y-%m-%d %H:%i') AS createDate, 
+		a.`totalMoney` AS totalMoney,
+		b.id as courseId, if(NOW()>b.`endTime` and a.`status`!=4, 3, a.status) AS status
+		from sport_order a
+		left join sport_course b on b.id=a.courseId
+		LEFT JOIN sport_company c ON c.`id` = b.`companyId`
+		where a.userId=#{userId}
+		ORDER BY a.`createDate` DESC
+	</select>
+	
+	<update id="updateCourse" parameterType="map">
+		update sport_order  set status=4 where id=#{orderId}
+	</update>
+	
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="String">
+	     delete from sport_order where id=#{id}
+	</delete>
+	
+	<select id="getOrderNumber" resultType="hashmap" parameterType="map">
+		SELECT COUNT(IF(courseId IS NOT NULL, TRUE, NULL)) as courseNumber, 
+		COUNT(IF(matchId IS NOT NULL, TRUE, NULL)) as matchNumber
+		FROM sport_order 
+		WHERE userId = #{userId} 
+		AND (STATUS = 0 
+		OR STATUS = 1);
+	</select>
+	
+	<select id="getUserInfoByOrderId" resultType="hashmap" parameterType="map">
+		SELECT b.`loginName`, b.`deviceTokens`
+		FROM sport_order a
+		LEFT JOIN sport_user b ON b.`id`=a.`userId`
+		WHERE a.`id`=#{id};
+	</select>
+	
+	<select id="getCourseOrder4Seller" resultType="hashmap" parameterType="map">
+		SELECT a.id, b.`name` AS courseName, c.address, c.name AS companyName,
+  		DATE_FORMAT(a.createDate, '%Y-%m-%d %H:%i') AS createDate,
+  		a.`totalMoney` AS totalMoney, b.id AS courseId,
+  		IF(NOW() > b.`endTime`, 3, a.status) AS status 
+		FROM sport_order a 
+  		LEFT JOIN sport_course b ON b.id = a.courseId 
+  		LEFT JOIN sport_company c ON c.`id`=b.`companyId`
+  		LEFT JOIN sport_user u ON u.`companyId`=b.`companyId` 
+		WHERE u.`id` =#{user.id} AND status !=0
+		ORDER BY a.`createDate` DESC 
+	</select>
+		
+</mapper> 

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.agitation.sport.repository.CourseDao">
+
+    <insert id="save"  parameterType="Course" useGeneratedKeys="true" keyProperty="id">
+		insert into sport_course (name, companyId, createDate, url, price, orginalPrice, startTime, stopTime, endTime, totalNumber,
+			buyNumber, introduce, notice, coachId, totalScore, courseTypeId, parentCatalogId, childCatalogId, classType, areaId)
+		values (
+			#{name}, #{companyId}, now(), #{url}, #{price}, #{orginalPrice}, #{startTime}, #{stopTime}, #{endTime}, #{totalNumber}, 
+			#{buyNumber}, #{introduce}, #{notice}, #{coach.id}, #{totalScore}, #{courseTypeId}, #{parentCatalog.id}, 
+			#{childCatalog.id}, #{classType}, #{areaId})
+	</insert>
+	
+	<select id="findAll" parameterType="MyPage" resultType="Course">
+		select id, name, endTime, startTime, stopTime, buyNumber, totalNumber
+		from sport_course
+		where classType=#{params.classType}
+	</select>
+	
+	<select id="findAllByMobile" resultType="hashmap" parameterType="MyPage">
+		select a.id, a.name, a.totalScore, DATE_FORMAT(a.startTime, '%Y-%m-%d %H:%i') AS startTime,
+  		DATE_FORMAT(a.endTime, '%Y-%m-%d %H:%i') AS endTime, DATE_FORMAT(a.stopTime, '%Y-%m-%d %H:%i') AS stopTime,
+  		a.price, a.orginalPrice, a.courseTypeId, a.parentCatalogId, a.childCatalogId, c.longitude, c.latitude, 
+  		c.address, c.name as companyName,
+  		 b.`id` AS collectionId, a.areaId
+		from sport_course a
+		LEFT JOIN sport_collect b ON b.`courseId`=a.id <if test="params.userId != null">AND b.`userId`=#{params.userId}</if>
+		left join sport_company c on c.id = a.companyId
+		where endTime>now() and childCatalogId=#{params.childCatalogId} and a.classType='0'
+		<if test="params.startTime != null">and a.startTime > #{params.startTime}</if>
+		<if test="params.endTime != null">and #{params.endTime} >a.endTime</if>
+		<if test="params.courseTypeId != null">and a.courseTypeId =#{params.courseTypeId}</if>
+		<if test="params.areaId != null">and a.areaId =#{params.areaId}</if>
+		order by ${params.sort}
+	</select>
+	
+	<select id="getOpenCourses" resultType="hashmap" parameterType="MyPage">
+		select a.id, a.name, a.totalScore, a.address, DATE_FORMAT(a.startTime, '%Y-%m-%d %H:%i') AS startTime,
+  		DATE_FORMAT(a.endTime, '%Y-%m-%d %H:%i') AS endTime, DATE_FORMAT(a.stopTime, '%Y-%m-%d %H:%i') AS stopTime,
+  		a.price, a.orginalPrice, a.longitude, a.latitude, b.`id` AS collectionId, a.areaId
+		from sport_course a
+		LEFT JOIN sport_collect b ON b.`courseId`=a.id
+		where endTime>now() and a.classType='1'
+		<if test="params.startTime != null">and a.startTime > #{params.startTime}</if>
+		<if test="params.endTime != null">and #{params.endTime} >a.endTime</if>
+		<if test="params.courseTypeId != null">and a.courseTypeId =#{params.courseTypeId}</if>
+		<if test="params.areaId != null">and a.areaId =#{params.areaId}</if>
+		order by ${params.sort}
+	</select>
+	
+	<update id="update" parameterType="Course" flushCache="true">
+		update sport_course set name=#{name}, updateDate=now(), price=#{price}, orginalPrice=#{orginalPrice}, 
+		courseTypeId=#{courseTypeId}, parentCatalogId=#{parentCatalog.id}, companyId=#{companyId}, 
+		childCatalogId=#{childCatalog.id}, stopTime=#{stopTime}, totalNumber=#{totalNumber}, 
+		notice=#{notice}, startTime=#{startTime}, endTime=#{endTime}, stopTime=#{stopTime}, 
+		coachId=#{coach.id}, areaId=#{areaId}, introduce=#{introduce}
+		where id=#{id}
+	</update>
+	
+    <select id="getCourseDetail" parameterType="map" resultType="hashmap">
+    	select a.id, a.name, a.price, a.orginalPrice, a.courseTypeId, a.parentCatalogId, a.childCatalogId, 
+    	a.buyNumber, a.totalNumber, a.notice, a.totalScore, a.`introduce`,
+    	DATE_FORMAT(a.startTime, '%Y-%m-%d %H:%i') AS startTime,
+  		DATE_FORMAT(a.endTime, '%m-%d') AS endTime, DATE_FORMAT(a.stopTime, '%Y-%m-%d %H:%i') AS stopTime,
+  		b.url AS coachUrl, b.name AS coachName, b.`coachTime`, b.`honor`,
+  		d.`latitude`, d.`longitude`, d.address, d.name as companyName, 
+    	c.name as courseTypeName
+    	from sport_course a
+    	left join sport_coach b on b.id=a.coachId
+    	left join sport_coursetype c on c.id=a.courseTypeId
+    	left join sport_company d on d.id = a.companyId
+    	where a.id=#{courseId}
+    </select>
+	
+	<select id="findOne"  parameterType="long" resultType="Course">
+		select a.id, a.name, a.price, a.orginalPrice, a.courseTypeId, a.parentCatalogId, a.companyId,
+		a.childCatalogId, a.stopTime, a.totalNumber, a.notice, 
+		a.startTime, a.endTime, a.stopTime, a.coachId, a.areaId, a.introduce
+		from sport_course a
+		where a.id=#{id}
+	</select>
+	
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="long">
+	     delete from sport_course where id=#{id}
+	</delete>
+	
+	<!-- 根据课程查找课程相关联的商家 -->
+	<select id="getSellerByCourseId" resultType="hashmap" parameterType="hashmap">
+		SELECT b.loginName, b.`deviceTokens`
+		FROM sport_course a
+		LEFT JOIN sport_user b ON b.`companyId`=a.`companyId`
+		WHERE a.`id`=#{courseId};
+	</select>
+	
+</mapper> 

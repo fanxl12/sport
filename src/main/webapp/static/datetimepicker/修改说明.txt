@@ -1,0 +1,17 @@
+修改bootstrap-datetimepicker.js文件的503行代码，解决有滚动条时日期位置不准确的问题。
+
+/**
+ * fix position bug
+ */
+var offsetTop=containerOffset.top+document.body.scrollTop;
+var offsetLeft=containerOffset.left+document.body.scrollLeft;
+if(document.body.scrollTop>0&&$(window).height<top+offsetTop){
+	top=top+offsetTop;
+}
+if(document.body.scrollLeft>0&&$(window).width<top+offsetLeft){
+	left=left+offsetLeft;
+}
+/**
+ * if have scroll ,this is wrong.
+ */
+//top = top + document.body.scrollTop

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.agitation.sport.repository.AreaDao">
+
+    <insert id="save"  parameterType="Area" useGeneratedKeys="true" keyProperty="id">
+		insert into sport_area (name, createDate)
+		values (
+		#{name}, now())
+	</insert>
+	
+	<update id="update" parameterType="Area" flushCache="true">
+		update sport_area set name=#{name} where id=#{id}
+	</update>
+	
+    <select id="findAll"  resultType="map">
+		select id, name
+		from sport_area
+	</select>
+	
+	<select id="findOne"  parameterType="long" resultType="Area">
+		select id, name
+		from sport_area where id=#{id}
+	</select>
+	
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="long">
+	     delete from sport_area where id=#{id}
+	</delete>
+	
+</mapper> 

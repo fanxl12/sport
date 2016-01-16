@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.agitation.sport.repository.CoachDao">
+
+    <insert id="save"  parameterType="Coach" useGeneratedKeys="true" keyProperty="id">
+		insert into sport_coach (name, url, coachTime, createDate, honor)
+		values (
+		#{name}, #{url}, #{coachTime}, now(), #{honor})
+	</insert>
+	
+	<update id="update" parameterType="Coach" flushCache="true">
+		update sport_coach set coachTime=#{coachTime}, url=#{url}, name=#{name}, updateDate=now(),
+		honor=#{honor}
+		where id=#{id}
+	</update>
+	
+    <select id="findAll"  resultType="Coach">
+		select id, name, url, coachTime
+		from sport_coach
+	</select>
+	
+	<select id="findOne"  parameterType="long" resultType="Coach">
+		select id, name, url, coachTime, honor
+		from sport_coach where id=#{id}
+	</select>
+	
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="long">
+	     delete from sport_coach where id=#{id}
+	</delete>
+	
+	<select id="findCoachByMobile" resultType="map" parameterType="hashmap">
+		select id, name, url, coachTime
+		from sport_coach
+		where id=#{id}
+	</select>
+</mapper> 

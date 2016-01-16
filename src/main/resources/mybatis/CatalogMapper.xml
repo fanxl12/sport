@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.agitation.sport.repository.CatalogDao">
+	<resultMap type="Catalog" id="catalogMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<collection property="childCatalogs" javaType="ArrayList" columnPrefix="child_" column="id" ofType="Catalog">
+			<id column="id" property="id"/>
+			<result column="name" property="name"/>
+			<result column="parentCatalogId" property="parentCatalogId"/>
+		</collection>
+	</resultMap>
+	
+   <sql id="baseSelectFieldList">url,name,createDate,updateDate, parentCatalogId</sql>
+   
+    <insert id="save"  parameterType="Catalog" useGeneratedKeys="true" keyProperty="id">
+		insert into sport_catalog (url,name,parentCatalogId,createDate)
+		values (
+		#{url},#{name},#{parentCatalog.id},now())
+	</insert>
+	
+	<update id="update" parameterType="Catalog" flushCache="true">
+		update sport_catalog set url=#{url}, name=#{name},parentCatalogId=#{parentCatalog.id}, updateDate=now() where id=#{id}
+	</update>
+    <select id="findAll"  parameterType="map" resultType="Catalog">
+		select id,<include refid="baseSelectFieldList"/>
+		from sport_catalog
+	</select>
+	
+	<select id="getParentCatalogs"  parameterType="map" resultMap="catalogMap">
+		select a.id, a.name, a.url, b.id child_id, b.url child_url, b.name child_name, b.parentCatalogId child_parentCatalogId
+		from sport_catalog a
+		left join sport_catalog b on b.parentCatalogId=a.id
+		where a.parentCatalogId is null
+		order by a.id
+	</select>
+	
+	<select id="getCourseParentCatalog" resultType="hashmap">
+		select id, name, url
+		from sport_catalog
+		where parentCatalogId is null
+	</select>
+	
+	<select id="getCourseChildCatalog" resultType="hashmap" parameterType="map">
+		select id, name, url
+		from sport_catalog
+		where parentCatalogId=#{parentCatalogId}
+	</select>
+	
+	<update id="updateField" parameterType="hashmap">
+		update sport_catalog set ${field}=#{value} where id=#{id}
+	</update>
+	<select id="getAllCatalogList" resultType="map">
+		SELECT a.id, a.code, a.name, b.id AS parentId, b.code AS parentCode, b.name AS parentName
+		FROM sport_catalog a
+		LEFT JOIN sport_catalog b ON b.id=a.`parentCatalogId`
+		WHERE a.parentCatalogId IS NOT NULL
+		ORDER BY b.`id`
+	</select>
+	<select id="getChildCatalogs"  parameterType="map" resultMap="catalogMap">
+		select a.id,a.url,a.name, b.id child_id, b.url child_url, b.name child_name, b.parentCatalogId child_parentCatalogId
+		from sport_catalog a
+		LEFT JOIN sport_catalog b ON b.id=a.`parentCatalogId`
+		where 
+		<if test="parentId!=null">a.parentCatalogId =#{parentId}</if>
+		<if test="parentId==null">a.parentCatalogId is not null</if>
+	</select>
+	<select id="getAllCatalogs" resultType="Catalog">
+		select id, name 
+		from sport_catalog
+		order by id, parentCatalogId
+	</select>
+	<select id="getAllChildCatalogs" parameterType="long" resultType="Catalog">
+		select id, code, name
+		from sport_catalog
+		where parentCatalogId=#{id}
+	</select>
+	<select id="getNewCatalogs"  parameterType="Date" resultType="Catalog">
+		select id,<include refid="baseSelectFieldList"/>
+		from sport_catalog 
+		<where>
+			<if test="date!=null">createDate>#{date}</if>
+		</where>
+		order by code
+	</select>
+	
+	<select id="getUpdatedCatalogs"  parameterType="Date" resultType="Catalog">
+		select id,<include refid="baseSelectFieldList"/>
+		from sport_catalog a
+		<where>
+			<if test="date!=null">updateDate>#{date}</if>
+		</where>
+		order by code
+	</select>
+	<select id="findOne"  parameterType="long" resultType="Catalog">
+		select id,<include refid="baseSelectFieldList"/>
+		from sport_catalog where id=#{id}
+	</select>
+	<select id="findByUserId"  parameterType="long" resultType="Catalog">
+		select id,<include refid="baseSelectFieldList"/>
+		from sport_catalog where user_id=#{id}
+	</select>
+	<select id="getSampleList" resultType="Catalog">
+		select id,name
+		from sport_catalog
+	</select>
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="long">
+	     delete from sport_catalog where id=#{id}
+	</delete>
+	
+
+	<delete id="batchDeleteChildCatalog">
+		delete from sport_catalog where 
+		parentCatalogId in 
+		<foreach item="rowData" collection="array" separator="," open="(" close=")">
+		#{rowData}
+		</foreach>
+	</delete>
+	
+	<delete id="batchDeleteCatalog">
+		delete from sport_catalog where 
+		id in 
+		<foreach item="rowData" collection="array" separator="," open="(" close=")">
+		#{rowData}
+		</foreach>
+	</delete>
+	
+	<select id="getJsonDataList"  parameterType="map" resultType="hashmap">
+		select id,code,name 
+		from sport_catalog
+		order by id
+	</select>
+</mapper> 

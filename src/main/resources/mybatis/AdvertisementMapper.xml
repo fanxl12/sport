@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.agitation.sport.repository.AdvertisementDao">
+
+    <insert id="save"  parameterType="Advertisement" useGeneratedKeys="true" keyProperty="id">
+		insert into sport_advertisement (name, url, website, type, createDate)
+		values (
+		#{name}, #{url}, #{website}, #{type}, now())
+	</insert>
+	
+	<update id="update" parameterType="Advertisement" flushCache="true">
+		update sport_advertisement set website=#{website}, url=#{url}, name=#{name}, updateDate=now() where id=#{id}
+	</update>
+	
+    <select id="findAll"  resultType="Advertisement">
+		select id, name, url, website, type
+		from sport_advertisement
+	</select>
+	
+	<select id="findOne"  parameterType="long" resultType="Advertisement">
+		select id, name, url, website, type
+		from sport_advertisement where id=#{id}
+	</select>
+	
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="long">
+	     delete from sport_advertisement where id=#{id}
+	</delete>
+	
+	<select id="findAllByMobile" resultType="map" parameterType="hashmap">
+		select id, name, url, website
+		from sport_advertisement
+		where type=#{type}
+	</select>
+</mapper> 

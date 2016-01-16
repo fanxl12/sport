@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.agitation.sport.repository.UserDao">
+	<!--
+		获取用户: 输出直接映射到对象, login_name列要"as loginName"以方便映射 ,team_id as "team.id"创建team对象并赋值
+	-->
+	<select id="findOne" parameterType="long" resultType="User">
+		select id, name, roles, loginName, companyId
+		from sport_user
+		where id=#{id}
+	</select>
+	
+	<update id="update" parameterType="User">
+		update sport_user set name=#{name}, password=#{password}
+		where id=#{id}
+	</update>
+	
+	<update id="updateDeviceTokens" parameterType="User">
+		update sport_user set deviceTokens=#{deviceTokens}
+		where id=#{id}
+	</update>
+	
+	<update id="updatePw" parameterType="User">
+		 update sport_user set password=#{password}, salt=#{salt}
+		where id=#{id}
+	</update>
+	
+	<update id="updateAddress" parameterType="User">
+		 update sport_user set address=#{address}
+		where id=#{id}
+	</update>
+	
+	<update id="updateHead" parameterType="User">
+		 update sport_user set head=#{head}
+		where id=#{id}
+	</update>
+	
+	<update id="updateSex" parameterType="User">
+		 update sport_user set sex=#{sex}
+		where id=#{id}
+	</update>
+	
+	<update id="updateAge" parameterType="User">
+		 update sport_user set age=#{age}, birthday=#{birthday}
+		where id=#{id}
+	</update>
+	
+	<update id="updatePhoneNumber" parameterType="User">
+		 update sport_user set phoneNumber=#{phoneNumber}
+		where id=#{id}
+	</update>
+	
+	<update id="updateName" parameterType="User">
+		 update sport_user set name=#{name}
+		where id=#{id}
+	</update>
+	
+	<select id="findByLoginName" resultType="User">
+	   select a.id, a.name,salt,roles, loginName, password, phoneNumber, head, age, sex, address, companyId
+	   from sport_user a
+	   where loginName=#{loginName}
+	</select>
+	
+	<select id="findByPhoneNumber" resultType="User">
+	   select a.id, a.name, salt,roles, loginName, password
+	   from sport_user a
+	   where phoneNumber=#{phoneNumber}
+	</select>
+	
+	<select id="findAll" resultType="User">
+		select a.id, a.name, salt, roles, loginName, registerDate
+		from sport_user a
+	</select>
+
+	<!-- 查询用户,演示: 1.输入用map传入多个参数 2.<where>语句, 智能添加where和and关键字 3.输出直接映射对象 -->
+	<select id="search" parameterType="map" resultType="User">
+		select id, name, roles,
+		login_name as loginName,
+		from sport_user
+		<where>
+			<if test="loginName != null">
+				login_name=#{loginName}
+			</if>
+			<if test="name != null">
+				and name=#{name}
+			</if>
+		</where>
+	</select>
+
+	<!-- 插入用户： 1.由数据库生成id并赋值到user对象 2.输入用对象, 嵌套属性表达式#{team.id} -->
+	<insert id="save" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+		insert into sport_user (
+		loginName, name, password, phoneNumber, roles, salt, registerDate, companyId)
+		values (
+		#{loginName}, #{name}, #{password},#{phoneNumber}, #{roles}, #{salt}, now(), #{companyId})
+	</insert>
+	
+	<!-- 删除用户 -->
+	<delete id="delete" parameterType="long">
+	     delete from sport_user where id=#{id}
+	</delete>
+	
+	
+</mapper> 
