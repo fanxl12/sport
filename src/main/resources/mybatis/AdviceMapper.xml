@@ -11,7 +11,8 @@
 	</insert>
 	
     <select id="findCourseAdvices"  resultType="hashmap" parameterType="MyPage">
-		select a.id, a.content, a.score, a.createDate, b.name, b.head
+		select a.id, a.content, a.score, DATE_FORMAT(a.createDate, '%Y-%m-%d %H:%i:%s') AS createDate,
+		b.name, b.head
 		from sport_advice a
 		left join sport_user b on b.id=a.userId
 		where a.courseId=#{params.courseId}

@@ -45,8 +45,7 @@
 		COUNT(IF(matchId IS NOT NULL, TRUE, NULL)) as matchNumber
 		FROM sport_order 
 		WHERE userId = #{userId} 
-		AND (STATUS = 0 
-		OR STATUS = 1);
+		AND (STATUS = 0 OR STATUS = 1 OR STATUS = 2);
 	</select>
 	
 	<select id="getUserInfoByOrderId" resultType="hashmap" parameterType="map">
