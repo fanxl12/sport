@@ -56,14 +56,14 @@ public class ApiLoginController {
 			loginSuccess = true;
 		}
 		
-		String sign = param.get("signStr")+ "";
-		String jia = param.get("jia")+"";
-		String yuan = SecurityAliUtils.decryptStr(jia);
-		if(SecurityAliUtils.checkSign(yuan, sign)){
-			System.out.println("数据正确，解密结果:"+yuan);
-		}else{
-			System.out.println("数据错误，解密结果:"+yuan);
-		}
+//		String sign = param.get("signStr")+ "";
+//		String jia = param.get("jia")+"";
+//		String yuan = SecurityAliUtils.decryptStr(jia);
+//		if(SecurityAliUtils.checkSign(yuan, sign)){
+//			System.out.println("数据正确，解密结果:"+yuan);
+//		}else{
+//			System.out.println("数据错误，解密结果:"+yuan);
+//		}
 		
 		try {
 			currentUser.login(new UsernamePasswordToken(param.get("userName")+"", param.get("passWord")+""));
