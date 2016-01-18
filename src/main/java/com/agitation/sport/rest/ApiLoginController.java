@@ -31,6 +31,7 @@ import com.agitation.sport.service.account.AccountService;
 import com.agitation.sport.service.account.ShiroDbRealm.ShiroUser;
 import com.agitation.sport.util.FileUtil;
 import com.agitation.sport.util.SMSService;
+import com.agitation.sport.util.SecurityAliUtils;
 
 
 @Controller
@@ -55,8 +56,14 @@ public class ApiLoginController {
 			loginSuccess = true;
 		}
 		
-		System.out.println("sign:"+param.get("signStr"));
-		System.out.println("jia:"+param.get("jia"));
+		String sign = param.get("signStr")+ "";
+		String jia = param.get("jia")+"";
+		String yuan = SecurityAliUtils.decryptStr(jia);
+		if(SecurityAliUtils.checkSign(yuan, sign)){
+			System.out.println("数据正确，解密结果:"+yuan);
+		}else{
+			System.out.println("数据错误，解密结果:"+yuan);
+		}
 		
 		try {
 			currentUser.login(new UsernamePasswordToken(param.get("userName")+"", param.get("passWord")+""));

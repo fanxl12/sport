@@ -37,11 +37,13 @@
 	</select>
 	
 	<select id="getOpenCourses" resultType="hashmap" parameterType="MyPage">
-		select a.id, a.name, a.totalScore, a.address, DATE_FORMAT(a.startTime, '%Y-%m-%d %H:%i') AS startTime,
+		select a.id, a.name, a.totalScore, DATE_FORMAT(a.startTime, '%Y-%m-%d %H:%i') AS startTime,
   		DATE_FORMAT(a.endTime, '%Y-%m-%d %H:%i') AS endTime, DATE_FORMAT(a.stopTime, '%Y-%m-%d %H:%i') AS stopTime,
-  		a.price, a.orginalPrice, a.longitude, a.latitude, b.`id` AS collectionId, a.areaId
+  		a.price, a.orginalPrice, b.`id` AS collectionId, a.areaId, a.courseTypeId,
+  		c.longitude, c.latitude, c.address, c.name as companyName
 		from sport_course a
 		LEFT JOIN sport_collect b ON b.`courseId`=a.id
+		left join sport_company c on c.id = a.companyId
 		where endTime>now() and a.classType='1'
 		<if test="params.startTime != null">and a.startTime > #{params.startTime}</if>
 		<if test="params.endTime != null">and #{params.endTime} >a.endTime</if>
