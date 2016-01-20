@@ -101,7 +101,7 @@ public class CatalogController {
 		initList(model);
 		model.addAttribute("catalog", catalogService.getCatalog(id));
 		model.addAttribute("action", "update");
-		return "catalog/catalog";
+		return "catalog/catalogForm";
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)

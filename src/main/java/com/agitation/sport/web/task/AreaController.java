@@ -68,7 +68,7 @@ public class AreaController {
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public String create(@Valid Area newArea, RedirectAttributes redirectAttributes) {
 		areaService.saveArea(newArea);
-		redirectAttributes.addFlashAttribute("message", "创建教练成功");
+		redirectAttributes.addFlashAttribute("message", "创建地区成功");
 		return "redirect:/area";
 	}
 
@@ -79,7 +79,7 @@ public class AreaController {
 		
 		model.addAttribute("area", areaService.getArea(id));
 		model.addAttribute("action", "update");
-		return "area/area";
+		return "area/areaForm";
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)

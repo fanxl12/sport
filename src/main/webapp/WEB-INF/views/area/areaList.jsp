@@ -4,7 +4,7 @@
 <script type="text/javascript">
 	function deleteConfirm(id){
 		if(confirm("确认要删除此地区吗?")){
-			window.location.href="${ctx}/area/delete/" + id ;
+			window.location.href="${ctx}/sport/area/delete/" + id ;
 		}else{
 		}
 	}

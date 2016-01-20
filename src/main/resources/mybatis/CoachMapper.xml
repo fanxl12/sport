@@ -11,7 +11,7 @@
 	</insert>
 	
 	<update id="update" parameterType="Coach" flushCache="true">
-		update sport_coach set coachTime=#{coachTime}, url=#{url}, name=#{name}, updateDate=now(),
+		update sport_coach set coachTime=#{coachTime}, <if test="url!=null">url=#{url},</if> name=#{name}, updateDate=now(),
 		honor=#{honor}
 		where id=#{id}
 	</update>

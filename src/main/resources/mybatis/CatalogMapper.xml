@@ -22,7 +22,8 @@
 	</insert>
 	
 	<update id="update" parameterType="Catalog" flushCache="true">
-		update sport_catalog set url=#{url}, name=#{name},parentCatalogId=#{parentCatalog.id}, updateDate=now() where id=#{id}
+		update sport_catalog set <if test="url!=null">url=#{url},</if> name=#{name},parentCatalogId=#{parentCatalog.id}, updateDate=now() 
+		where id=#{id}
 	</update>
     <select id="findAll"  parameterType="map" resultType="Catalog">
 		select id,<include refid="baseSelectFieldList"/>

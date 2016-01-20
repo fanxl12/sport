@@ -11,7 +11,8 @@
 	</insert>
 	
 	<update id="update" parameterType="Advertisement" flushCache="true">
-		update sport_advertisement set website=#{website}, url=#{url}, name=#{name}, updateDate=now() where id=#{id}
+		update sport_advertisement set website=#{website}, <if test="url!=null">url=#{url},</if> name=#{name}, updateDate=now() 
+		where id=#{id}
 	</update>
 	
     <select id="findAll"  resultType="Advertisement">

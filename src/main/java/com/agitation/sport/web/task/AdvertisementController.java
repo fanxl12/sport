@@ -89,13 +89,13 @@ public class AdvertisementController {
 		
 		model.addAttribute("advertisement", advertisementService.getAdvertisement(id));
 		model.addAttribute("action", "update");
-		return "advertisement/advertisement";
+		return "advertisement/advertisementForm";
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public String update(@Valid Advertisement advertisement, RedirectAttributes redirectAttributes) {
 		advertisementService.updateAdvertisement(advertisement);
-		redirectAttributes.addFlashAttribute("message", "更新类别成功");
+		redirectAttributes.addFlashAttribute("message", "更新广告成功");
 		return "redirect:/advertisement/";
 	}
 
@@ -113,7 +113,7 @@ public class AdvertisementController {
 		}
 		
 		advertisementService.deleteAdvertisement(id);
-		redirectAttributes.addFlashAttribute("message", "删除类别成功");
+		redirectAttributes.addFlashAttribute("message", "删除广告成功");
 		return "redirect:/advertisement/";
 	}
 	
