@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +44,8 @@ public class AreaController {
 		sortTypes.put("code", "编号");
 		sortTypes.put("name", "名称");
 	}
+	
+	private static Logger logger = LoggerFactory.getLogger(AreaController.class);
 
 	@Autowired
 	private AreaService areaService;

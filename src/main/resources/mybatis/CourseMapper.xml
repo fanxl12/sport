@@ -97,4 +97,12 @@
 		WHERE a.`id`=#{courseId};
 	</select>
 	
+	<select id="getPastOpenCourse" resultType="hashmap" parameterType="MyPage">
+		SELECT a.id, a.url, a.name, a.totalScore, DATE_FORMAT(a.startTime, '%Y-%m-%d %H:%i') AS startTime,
+		c.address, a.price, a.orginalPrice
+		FROM `sport_course` a
+		left join sport_company c on c.id = a.companyId
+		WHERE NOW()>startTime AND classType = 1
+	</select>
+	
 </mapper> 

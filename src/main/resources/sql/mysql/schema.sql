@@ -49,9 +49,7 @@ CREATE TABLE `sport_user` (
   `deviceTokens` varchar(255) DEFAULT NULL,
   `companyId` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `loginName` (`loginName`),
-  KEY `user_wj_companyId` (`companyId`),
-  CONSTRAINT `user_wj_companyId` FOREIGN KEY (`companyId`) REFERENCES `sport_company` (`id`)
+  UNIQUE KEY `loginName` (`loginName`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `sport_advertisement` (

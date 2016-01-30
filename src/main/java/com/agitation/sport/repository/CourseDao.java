@@ -28,4 +28,7 @@ public interface CourseDao {
 	Map<String, Object> getCourseDetail(Map<String, Object> param);
 	
 	Map<String, Object> getSellerByCourseId(Map<String, Object> param);
+	
+	//查询往期公开课
+	List<Map<String, Object>> getPastOpenCourse(MyPage<Map<String, Object>> page);
 }

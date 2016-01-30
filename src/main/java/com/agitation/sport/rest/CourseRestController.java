@@ -91,6 +91,45 @@ public class CourseRestController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("type", 0);
 		retData.put("adversitements", advertisementService.getAllAdvertisementList(param));
+		
+		MyPage<Map<String, Object>> page = new MyPage<Map<String, Object>>();
+		page.setNumber(1);
+		page.setSize(5);
+//		page.setParams(param);
+//		if(param.containsKey("pageNumber")){
+//			int number = Integer.valueOf(param.get("pageNumber")+"").intValue();
+//			page.setNumber(number);
+//		}
+//		if(param.containsKey("pageSize")){
+//			int size = Integer.valueOf(param.get("pageSize")+"").intValue();
+//			page.setSize(size);
+//		}		
+		List<Map<String, Object>> pastCourses = coureseService.getPastOpenCourse(page);
+		retData.put("pastCourses", pastCourses);
+		
+		result.put("retData", retData);
+		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/getPastOpenCourse", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<?> getPastOpenCourse(@RequestParam Map<String, Object> param){
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("result", true);
+		Map<String, Object> retData = new HashMap<String, Object>();
+		
+		MyPage<Map<String, Object>> page = new MyPage<Map<String, Object>>();
+		page.setParams(param);
+		if(param.containsKey("pageNumber")){
+			int number = Integer.valueOf(param.get("pageNumber")+"").intValue();
+			page.setNumber(number);
+		}
+		if(param.containsKey("pageSize")){
+			int size = Integer.valueOf(param.get("pageSize")+"").intValue();
+			page.setSize(size);
+		}
+		List<Map<String, Object>> pastCourses = coureseService.getPastOpenCourse(page);
+		retData.put("pastCourses", pastCourses);
 		result.put("retData", retData);
 		return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
 	}

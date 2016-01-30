@@ -17,8 +17,8 @@ public class Course extends BaseEntity {
 	private double price; //价格
 	private double orginalPrice; //原价
 	private int companyId; //课程上课场馆Id
-	private Date startTime; //上课开始时间
-	private Date stopTime; //上课开始时间
+	private Date startTime; //课程上课时间
+	private Date stopTime; //课程下课时间
 	private Date endTime; //截止报名时间
 	private int totalNumber; //课程总数量
 	private int buyNumber; //已购买数量

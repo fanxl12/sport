@@ -58,4 +58,8 @@ public class CourseService {
 		return courseDao.getSellerByCourseId(param);
 	}
 	
+	public List<Map<String, Object>> getPastOpenCourse(MyPage<Map<String, Object>> page){
+		return courseDao.getPastOpenCourse(page);
+	}
+	
 }
