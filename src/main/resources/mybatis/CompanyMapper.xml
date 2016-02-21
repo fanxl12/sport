@@ -5,14 +5,14 @@
 <mapper namespace="com.agitation.sport.repository.CompanyDao">
 
     <insert id="save"  parameterType="Company" useGeneratedKeys="true" keyProperty="id">
-		insert into sport_company (name, address, longitude, latitude, createDate)
+		insert into sport_company (name, address, longitude, latitude, createDate, areaId)
 		values (
-		#{name}, #{address}, #{longitude}, #{latitude}, now())
+		#{name}, #{address}, #{longitude}, #{latitude}, now(), #{areaId})
 	</insert>
 	
 	<update id="update" parameterType="Company" flushCache="true">
 		update sport_company set name=#{name}, address=#{address}, longitude=#{longitude}, latitude=#{latitude}, 
-		updateDate=now() where id=#{id}
+		updateDate=now(), areaId=#{areaId} where id=#{id}
 	</update>
 	
     <select id="findAll"  resultType="Company">
@@ -21,7 +21,7 @@
 	</select>
 	
 	<select id="findOne"  parameterType="long" resultType="Company">
-		select id, name, address, longitude, latitude
+		select id, name, address, longitude, latitude, areaId
 		from sport_company where id=#{id}
 	</select>
 	

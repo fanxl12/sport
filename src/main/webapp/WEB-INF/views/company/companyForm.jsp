@@ -30,6 +30,19 @@
 					<input type="text" id="company_latitude" name="latitude"  value="${company.latitude}" class="input-large"/>
 				</div>
 			</div>
+			<div class="control-group">
+				<label for="course_area" class="control-label">地区:</label>
+				<div class="controls">
+					<select size="1" name="areaId" >
+					  <c:forEach var="area" items="${areas}">
+						   <option value="${area.id}" 
+						   <c:if test="${area.id==company.areaId}">selected</c:if>>
+						   <c:out value="${area.name}"/>
+						   </option>
+					   </c:forEach>
+					</select>
+				</div>
+			</div>
 			<div class="form-actions">
 				<input id="submit_btn" class="btn btn-primary" type="submit" value="提交"/>&nbsp;	
 				<input id="cancel_btn" class="btn" type="button" value="返回" onclick="history.back()"/>

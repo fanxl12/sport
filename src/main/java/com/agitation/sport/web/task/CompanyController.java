@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.agitation.sport.entity.Company;
+import com.agitation.sport.service.task.AreaService;
 import com.agitation.sport.service.task.CompanyService;
 import com.google.common.collect.Maps;
 
@@ -41,6 +42,9 @@ public class CompanyController {
 
 	@Autowired
 	private CompanyService companyService;
+	
+	@Autowired
+	private AreaService areaService;
 
 	@RequestMapping(value = "")
 	public String list(
@@ -56,6 +60,7 @@ public class CompanyController {
 	public String createForm(Model model) {
 		model.addAttribute("company", new Company());
 		model.addAttribute("action", "create");
+		model.addAttribute("areas", areaService.getAllAreas());
 		return "company/companyForm";
 	}
 
@@ -70,6 +75,7 @@ public class CompanyController {
 	@RequestMapping(value = "update/{id}", method = RequestMethod.GET)
 	public String updateForm(@PathVariable("id") Long id, Model model) {
 		model.addAttribute("company", companyService.getCompany(id));
+		model.addAttribute("areas", areaService.getAllAreas());
 		model.addAttribute("action", "update");
 		return "company/companyForm";
 	}

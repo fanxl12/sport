@@ -12,7 +12,6 @@ drop table if exists sport_collect;
 drop table if exists sport_order;
 
 
-
 create table sport_task (
 	id bigint auto_increment,
 	title varchar(128) not null,
@@ -123,16 +122,13 @@ CREATE TABLE `sport_course` (
   `updateDate` datetime DEFAULT NULL,
   `stopTime` datetime DEFAULT NULL,
   `classType` int(4) DEFAULT '0',
-  `areaId` bigint(20) DEFAULT NULL,
   `companyId` bigint(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_course_coach` (`coachId`),
   KEY `fk_ct_id` (`courseTypeId`),
   KEY `fk_company_id` (`companyId`),
-  KEY `fk_area_id` (`areaId`),
   KEY `fk_parent_catalog` (`parentCatalogId`),
   KEY `fk_child_catalog` (`childCatalogId`),
-  CONSTRAINT `fk_area_id` FOREIGN KEY (`areaId`) REFERENCES `sport_area` (`id`),
   CONSTRAINT `fk_child_catalog` FOREIGN KEY (`childCatalogId`) REFERENCES `sport_catalog` (`id`),
   CONSTRAINT `fk_company_id` FOREIGN KEY (`companyId`) REFERENCES `sport_company` (`id`),
   CONSTRAINT `fk_course_coach` FOREIGN KEY (`coachId`) REFERENCES `sport_coach` (`id`),

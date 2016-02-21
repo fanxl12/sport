@@ -23,7 +23,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.agitation.sport.entity.Course;
 import com.agitation.sport.entity.MyPage;
-import com.agitation.sport.service.task.AreaService;
 import com.agitation.sport.service.task.CatalogService;
 import com.agitation.sport.service.task.CoachService;
 import com.agitation.sport.service.task.CompanyService;
@@ -70,9 +69,6 @@ public class CourseController {
 	
 	@Autowired
 	private CatalogService catalogService;
-	
-	@Autowired
-	private AreaService areaService;
 	
 	@Autowired
 	private CompanyService companyService;
@@ -126,7 +122,6 @@ public class CourseController {
 		model.addAttribute("allCoachs", coachService.getAllCoachs());
 		model.addAttribute("allCourseTypes", courseTypeService.getAllCourseTypes());
 		model.addAttribute("parentCatalogs", catalogService.getParentList());
-		model.addAttribute("areas", areaService.getAllAreas());
 		model.addAttribute("companys", companyService.getAllCompanys());
 		model.addAttribute("action", "create");
 		return "course/courseForm";
@@ -145,7 +140,6 @@ public class CourseController {
 		model.addAttribute("course", new Course());
 		model.addAttribute("allCoachs", coachService.getAllCoachs());
 		model.addAttribute("allCourseTypes", courseTypeService.getAllCourseTypes());
-		model.addAttribute("areas", areaService.getAllAreas());
 		model.addAttribute("companys", companyService.getAllCompanys());
 		model.addAttribute("action", "createOpen");
 		return "course/openCourseForm";
@@ -164,7 +158,6 @@ public class CourseController {
 		model.addAttribute("allCoachs", coachService.getAllCoachs());
 		model.addAttribute("allCourseTypes", courseTypeService.getAllCourseTypes());
 		model.addAttribute("parentCatalogs", catalogService.getParentList());
-		model.addAttribute("areas", areaService.getAllAreas());
 		model.addAttribute("companys", companyService.getAllCompanys());
 		model.addAttribute("course", courseService.getCourse(id));
 		model.addAttribute("action", "update");

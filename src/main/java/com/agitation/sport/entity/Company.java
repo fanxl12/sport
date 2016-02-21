@@ -11,7 +11,8 @@ public class Company extends BaseEntity {
 	private String address;
 	private double longitude; //经度
 	private double latitude; //纬度
-	private Date updateDate;
+	private Date updateDate; 
+	private long areaId; //地区Id
 	
 	public Date getUpdateDate() {
 		return updateDate;
@@ -36,6 +37,12 @@ public class Company extends BaseEntity {
 	}
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	public long getAreaId() {
+		return areaId;
+	}
+	public void setAreaId(long areaId) {
+		this.areaId = areaId;
 	}
 	
 

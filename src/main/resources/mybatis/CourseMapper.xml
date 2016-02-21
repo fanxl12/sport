@@ -6,11 +6,11 @@
 
     <insert id="save"  parameterType="Course" useGeneratedKeys="true" keyProperty="id">
 		insert into sport_course (name, companyId, createDate, url, price, orginalPrice, startTime, stopTime, endTime, totalNumber,
-			buyNumber, introduce, notice, coachId, totalScore, courseTypeId, parentCatalogId, childCatalogId, classType, areaId)
+			buyNumber, introduce, notice, coachId, totalScore, courseTypeId, parentCatalogId, childCatalogId, classType)
 		values (
 			#{name}, #{companyId}, now(), #{url}, #{price}, #{orginalPrice}, #{startTime}, #{stopTime}, #{endTime}, #{totalNumber}, 
 			#{buyNumber}, #{introduce}, #{notice}, #{coach.id}, #{totalScore}, #{courseTypeId}, #{parentCatalog.id}, 
-			#{childCatalog.id}, #{classType}, #{areaId})
+			#{childCatalog.id}, #{classType})
 	</insert>
 	
 	<select id="findAll" parameterType="MyPage" resultType="Course">
@@ -24,31 +24,33 @@
   		DATE_FORMAT(a.endTime, '%Y-%m-%d %H:%i') AS endTime, DATE_FORMAT(a.stopTime, '%Y-%m-%d %H:%i') AS stopTime,
   		a.price, a.orginalPrice, a.courseTypeId, a.parentCatalogId, a.childCatalogId, c.longitude, c.latitude, 
   		c.address, c.name as companyName,
-  		 b.`id` AS collectionId, a.areaId
+  		 b.`id` AS collectionId, c.areaId
 		from sport_course a
 		LEFT JOIN sport_collect b ON b.`courseId`=a.id <if test="params.userId != null">AND b.`userId`=#{params.userId}</if>
 		left join sport_company c on c.id = a.companyId
+		left join sport_area d on d.id = c.areaId
 		where endTime>now() and childCatalogId=#{params.childCatalogId} and a.classType='0'
 		<if test="params.startTime != null">and a.startTime > #{params.startTime}</if>
 		<if test="params.endTime != null">and #{params.endTime} >a.endTime</if>
 		<if test="params.courseTypeId != null">and a.courseTypeId =#{params.courseTypeId}</if>
-		<if test="params.areaId != null">and a.areaId =#{params.areaId}</if>
+		<if test="params.areaId != null">and c.areaId =#{params.areaId}</if>
 		order by ${params.sort}
 	</select>
 	
 	<select id="getOpenCourses" resultType="hashmap" parameterType="MyPage">
 		select a.id, a.name, a.totalScore, DATE_FORMAT(a.startTime, '%Y-%m-%d %H:%i') AS startTime,
   		DATE_FORMAT(a.endTime, '%Y-%m-%d %H:%i') AS endTime, DATE_FORMAT(a.stopTime, '%Y-%m-%d %H:%i') AS stopTime,
-  		a.price, a.orginalPrice, b.`id` AS collectionId, a.areaId, a.courseTypeId,
-  		c.longitude, c.latitude, c.address, c.name as companyName
+  		a.price, a.orginalPrice, b.`id` AS collectionId, a.courseTypeId,
+  		c.longitude, c.latitude, c.address, c.name as companyName, c.areaId
 		from sport_course a
 		LEFT JOIN sport_collect b ON b.`courseId`=a.id
 		left join sport_company c on c.id = a.companyId
+		left join sport_area d on d.id = c.areaId
 		where endTime>now() and a.classType='1'
 		<if test="params.startTime != null">and a.startTime > #{params.startTime}</if>
 		<if test="params.endTime != null">and #{params.endTime} >a.endTime</if>
 		<if test="params.courseTypeId != null">and a.courseTypeId =#{params.courseTypeId}</if>
-		<if test="params.areaId != null">and a.areaId =#{params.areaId}</if>
+		<if test="params.areaId != null">and c.areaId =#{params.areaId}</if>
 		order by ${params.sort}
 	</select>
 	
@@ -57,7 +59,7 @@
 		courseTypeId=#{courseTypeId}, parentCatalogId=#{parentCatalog.id}, companyId=#{companyId}, 
 		childCatalogId=#{childCatalog.id}, stopTime=#{stopTime}, totalNumber=#{totalNumber}, 
 		notice=#{notice}, startTime=#{startTime}, endTime=#{endTime}, stopTime=#{stopTime}, 
-		coachId=#{coach.id}, areaId=#{areaId}, introduce=#{introduce}
+		coachId=#{coach.id}, introduce=#{introduce}
 		where id=#{id}
 	</update>
 	
@@ -79,8 +81,9 @@
 	<select id="findOne"  parameterType="long" resultType="Course">
 		select a.id, a.name, a.price, a.orginalPrice, a.courseTypeId, a.parentCatalogId, a.companyId,
 		a.childCatalogId, a.stopTime, a.totalNumber, a.notice, 
-		a.startTime, a.endTime, a.stopTime, a.coachId, a.areaId, a.introduce
+		a.startTime, a.endTime, a.stopTime, a.coachId, a.introduce, c.areaId
 		from sport_course a
+		left join sport_company c on c.id = a.companyId
 		where a.id=#{id}
 	</select>
 	

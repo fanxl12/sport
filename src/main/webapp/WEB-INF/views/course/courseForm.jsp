@@ -174,19 +174,6 @@ function addOption(data){
 				</div>
 			</div>
 			<div class="control-group">
-				<label for="course_area" class="control-label">地区:</label>
-				<div class="controls">
-					<select size="1" name="areaId" >
-					  <c:forEach var="area" items="${areas}">
-						   <option value="${area.id}" 
-						   <c:if test="${area.id==course.areaId}">selected</c:if>>
-						   <c:out value="${area.name}"/>
-						   </option>
-					   </c:forEach>
-					</select>
-				</div>
-			</div>
-			<div class="control-group">
 				<label for="course_company" class="control-label">场馆:</label>
 				<div class="controls">
 					<select size="1" name="companyId" >
